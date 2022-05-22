@@ -48,7 +48,7 @@ class Venue(db.Model):
     shows = db.relationship('Show', backref='Venue', lazy=True)
 
     def __repr__(self):
-        return f'<Venue {self.id} {self.name} {self.city}>'
+        return f'<Venue {self.id} {self.name} {self.city} {self.state} {self.address} {self.phone} {self.image_link} {self.facebook_link} {self.genres} {self.website} {self.seeking_client} {self.seeking_description} {self.shows}>'
     # TODO: implement any missing fields, as a database migration using Flask-Migrate
 
 class Artist(db.Model):
@@ -82,6 +82,10 @@ class Show(db.Model):
         'Artist.id'), nullable=False)
     venue_id = db.Column(db.Integer, db.ForeignKey('Venue.id'), nullable=False)
     start_time = db.Column(db.DateTime, nullable=False)
+    name = db.Column(db.String())
+
+    def __repr__(self):
+        return f'<Artist {self.id} {self.artist_id} {self.venue_id} {self.start_time} {self.name}>'
 
 
 # TODO Implement Show and Artist models, and complete all model relationships and properties, as a database migration.
@@ -116,29 +120,72 @@ def index():
 def venues():
   # TODO: replace with real venues data.
   #       num_upcoming_shows should be aggregated based on number of upcoming shows per venue.
-  venues = Venue.query.all()
-  print(venues)
-  data=[{
-    "city": "San Francisco",
-    "state": "CA",
-    "venues": [{
-      "id": 1,
-      "name": "The Musical Hop",
-      "num_upcoming_shows": 0,
-    }, {
-      "id": 3,
-      "name": "Park Square Live Music & Coffee",
-      "num_upcoming_shows": 1,
-    }]
-  }, {
-    "city": "New York",
-    "state": "NY",
-    "venues": [{
-      "id": 2,
-      "name": "The Dueling Pianos Bar",
-      "num_upcoming_shows": 0,
-    }]
-  }]
+  
+  # The list of data we want to display
+  data = [] 
+ 
+  final_dictionary = {}
+
+  #Perform a query in our database
+  venue_data = Venue.query.all()
+
+  # Loop through the result, so we can use each data from it
+  for location in venue_data:
+    id = location.id
+    city = location.city
+    state = location.state
+
+    # A variable that holds our city location and state values
+    key = f'{location.city}, {location.state}'
+
+    # Get shows that corrresponds to a location id
+    upcoming_shows = Show.query.filter_by(venue_id=id).all()
+
+
+    for item in upcoming_shows:
+      # A dictionary that holds the value of each item in the upcoming_shows
+      upcoming_shows_dictionary = {
+        "id": item.id,
+        "name": item.name,
+        "num_upcoming_shows": len(upcoming_shows),
+      }
+      # This adds city, state and upcoming_shows_dictionary to a new final dictionary
+      final_dictionary.setdefault(key, []).append({
+      "city": city,
+      "state": state,
+      "venues": [upcoming_shows_dictionary],
+    })
+
+  # This adds the final dictionary to the list variable called data
+  for value in final_dictionary.values():
+      data.append({
+        'city': value[0]['city'],
+        'state': value[0]['state'],
+        'venues': value[0]['venues']
+      })
+    
+
+  # data=[{
+  #   "city": "San Francisco",
+  #   "state": "CA",
+  #   "venues": [{
+  #     "id": 1,
+  #     "name": "The Musical Hop",
+  #     "num_upcoming_shows": 0,
+  #   }, {
+  #     "id": 3,
+  #     "name": "Park Square Live Music & Coffee",
+  #     "num_upcoming_shows": 1,
+  #   }]
+  # },
+  #   "city": "New York",
+  #   "state": "NY",
+  #   "venues": [{
+  #     "id": 2,
+  #     "name": "The Dueling Pianos Bar",
+  #     "num_upcoming_shows": 0,
+  #   }]
+  # }]
   return render_template('pages/venues.html', areas=data);
 
 @app.route('/venues/search', methods=['POST'])
