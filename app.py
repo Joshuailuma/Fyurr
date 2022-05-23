@@ -124,38 +124,23 @@ def venues():
 
   # Loop through the result, so we can use each data from it
   for location in venue_data:
-    id = location.id
-    city = location.city
-    state = location.state
-    name= location.name
-
-    # A variable that holds our city location and state values
     key = f'{location.city}, {location.state}'
 
-    # Get shows that corrresponds to a location id
-    upcoming_shows = Show.query.filter_by(venue_id=id).all()
-
-
-    for venue in upcoming_shows:
-      # A dictionary that holds the value of some venue data including upcoming_shows length
-      upcoming_shows_dictionary = {
-        "id": location.id,
-        "name": location.name,
-        "num_upcoming_shows": len(upcoming_shows),
-      }
-      # This adds city, state and upcoming_shows_dictionary to a new final dictionary
-      final_dictionary.setdefault(key, []).append({
-      "city": city,
-      "state": state,
-      "venues": [upcoming_shows_dictionary],
+    final_dictionary.setdefault(key, []).append({
+      "id": location.id,
+      "name": location.name,
+      "city": location.city,
+      "state": location.state,
+      "num_upcoming_shows": len(location.shows),
     })
 
   # This adds the final dictionary to the list variable called data
   for value in final_dictionary.values():
+    
       data.append({
         'city': value[0]['city'],
         'state': value[0]['state'],
-        'venues': value[0]['venues']
+        'venues': value
       })
     
 
@@ -208,6 +193,7 @@ def show_venue(venue_id):
 
   # To get the venue by id
   venues = Venue.query.filter_by(id=venue_id).all()
+  print(venues)
 
   past_shows = []
   upcoming_shows = []
@@ -266,84 +252,84 @@ def show_venue(venue_id):
   }
    
 
-  data1={
-    "id": 1, #
-    "name": "The Musical Hop", #
-    "genres": ["Jazz", "Reggae", "Swing", "Classical", "Folk"],
-    "address": "1015 Folsom Street", #
-    "city": "San Francisco", #
-    "state": "CA", #
-    "phone": "123-123-1234", #
-    "website": "https://www.themusicalhop.com",
-    "facebook_link": "https://www.facebook.com/TheMusicalHop", #
-    "seeking_talent": True,
-    "seeking_description": "We are on the lookout for a local artist to play every two weeks. Please call us.",
-    # image_link
-    "image_link": "https://images.unsplash.com/photo-1543900694-133f37abaaa5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
-    "past_shows": [{
-      "artist_id": 4,
-      "artist_name": "Guns N Petals",
-      "artist_image_link": "https://images.unsplash.com/photo-1549213783-8284d0336c4f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80",
-      "start_time": "2019-05-21T21:30:00.000Z" 
-    }],
-    "upcoming_shows": [], 
-    "past_shows_count": 1, 
-    "upcoming_shows_count": 0, 
-  }
-  data2={
-    "id": 2,
-    "name": "The Dueling Pianos Bar",
-    "genres": ["Classical", "R&B", "Hip-Hop"],
-    "address": "335 Delancey Street",
-    "city": "New York",
-    "state": "NY",
-    "phone": "914-003-1132",
-    "website": "https://www.theduelingpianos.com",
-    "facebook_link": "https://www.facebook.com/theduelingpianos",
-    "seeking_talent": False,
-    "image_link": "https://images.unsplash.com/photo-1497032205916-ac775f0649ae?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80",
-    "past_shows": [],
-    "upcoming_shows": [],
-    "past_shows_count": 0,
-    "upcoming_shows_count": 0,
-  }
-  data3={
-    "id": 3,
-    "name": "Park Square Live Music & Coffee",
-    "genres": ["Rock n Roll", "Jazz", "Classical", "Folk"],
-    "address": "34 Whiskey Moore Ave",
-    "city": "San Francisco",
-    "state": "CA",
-    "phone": "415-000-1234",
-    "website": "https://www.parksquarelivemusicandcoffee.com",
-    "facebook_link": "https://www.facebook.com/ParkSquareLiveMusicAndCoffee",
-    "seeking_talent": False,
-    "image_link": "https://images.unsplash.com/photo-1485686531765-ba63b07845a7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=747&q=80",
-    "past_shows": [{
-      "artist_id": 5,
-      "artist_name": "Matt Quevedo",
-      "artist_image_link": "https://images.unsplash.com/photo-1495223153807-b916f75de8c5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80",
-      "start_time": "2019-06-15T23:00:00.000Z"
-    }],
-    "upcoming_shows": [{
-      "artist_id": 6,
-      "artist_name": "The Wild Sax Band",
-      "artist_image_link": "https://images.unsplash.com/photo-1558369981-f9ca78462e61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=794&q=80",
-      "start_time": "2035-04-01T20:00:00.000Z"
-    }, {
-      "artist_id": 6,
-      "artist_name": "The Wild Sax Band",
-      "artist_image_link": "https://images.unsplash.com/photo-1558369981-f9ca78462e61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=794&q=80",
-      "start_time": "2035-04-08T20:00:00.000Z"
-    }, {
-      "artist_id": 6,
-      "artist_name": "The Wild Sax Band",
-      "artist_image_link": "https://images.unsplash.com/photo-1558369981-f9ca78462e61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=794&q=80",
-      "start_time": "2035-04-15T20:00:00.000Z"
-    }],
-    "past_shows_count": 1,
-    "upcoming_shows_count": 1,
-  }
+  # data1={
+  #   "id": 1, #
+  #   "name": "The Musical Hop", #
+  #   "genres": ["Jazz", "Reggae", "Swing", "Classical", "Folk"],
+  #   "address": "1015 Folsom Street", #
+  #   "city": "San Francisco", #
+  #   "state": "CA", #
+  #   "phone": "123-123-1234", #
+  #   "website": "https://www.themusicalhop.com",
+  #   "facebook_link": "https://www.facebook.com/TheMusicalHop", #
+  #   "seeking_talent": True,
+  #   "seeking_description": "We are on the lookout for a local artist to play every two weeks. Please call us.",
+  #   # image_link
+  #   "image_link": "https://images.unsplash.com/photo-1543900694-133f37abaaa5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
+  #   "past_shows": [{
+  #     "artist_id": 4,
+  #     "artist_name": "Guns N Petals",
+  #     "artist_image_link": "https://images.unsplash.com/photo-1549213783-8284d0336c4f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80",
+  #     "start_time": "2019-05-21T21:30:00.000Z" 
+  #   }],
+  #   "upcoming_shows": [], 
+  #   "past_shows_count": 1, 
+  #   "upcoming_shows_count": 0, 
+  # }
+  # data2={
+  #   "id": 2,
+  #   "name": "The Dueling Pianos Bar",
+  #   "genres": ["Classical", "R&B", "Hip-Hop"],
+  #   "address": "335 Delancey Street",
+  #   "city": "New York",
+  #   "state": "NY",
+  #   "phone": "914-003-1132",
+  #   "website": "https://www.theduelingpianos.com",
+  #   "facebook_link": "https://www.facebook.com/theduelingpianos",
+  #   "seeking_talent": False,
+  #   "image_link": "https://images.unsplash.com/photo-1497032205916-ac775f0649ae?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80",
+  #   "past_shows": [],
+  #   "upcoming_shows": [],
+  #   "past_shows_count": 0,
+  #   "upcoming_shows_count": 0,
+  # }
+  # data3={
+  #   "id": 3,
+  #   "name": "Park Square Live Music & Coffee",
+  #   "genres": ["Rock n Roll", "Jazz", "Classical", "Folk"],
+  #   "address": "34 Whiskey Moore Ave",
+  #   "city": "San Francisco",
+  #   "state": "CA",
+  #   "phone": "415-000-1234",
+  #   "website": "https://www.parksquarelivemusicandcoffee.com",
+  #   "facebook_link": "https://www.facebook.com/ParkSquareLiveMusicAndCoffee",
+  #   "seeking_talent": False,
+  #   "image_link": "https://images.unsplash.com/photo-1485686531765-ba63b07845a7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=747&q=80",
+  #   "past_shows": [{
+  #     "artist_id": 5,
+  #     "artist_name": "Matt Quevedo",
+  #     "artist_image_link": "https://images.unsplash.com/photo-1495223153807-b916f75de8c5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80",
+  #     "start_time": "2019-06-15T23:00:00.000Z"
+  #   }],
+  #   "upcoming_shows": [{
+  #     "artist_id": 6,
+  #     "artist_name": "The Wild Sax Band",
+  #     "artist_image_link": "https://images.unsplash.com/photo-1558369981-f9ca78462e61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=794&q=80",
+  #     "start_time": "2035-04-01T20:00:00.000Z"
+  #   }, {
+  #     "artist_id": 6,
+  #     "artist_name": "The Wild Sax Band",
+  #     "artist_image_link": "https://images.unsplash.com/photo-1558369981-f9ca78462e61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=794&q=80",
+  #     "start_time": "2035-04-08T20:00:00.000Z"
+  #   }, {
+  #     "artist_id": 6,
+  #     "artist_name": "The Wild Sax Band",
+  #     "artist_image_link": "https://images.unsplash.com/photo-1558369981-f9ca78462e61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=794&q=80",
+  #     "start_time": "2035-04-15T20:00:00.000Z"
+  #   }],
+  #   "past_shows_count": 1,
+  #   "upcoming_shows_count": 1,
+  # }
 
  # data = list(filter(lambda d: d['id'] == venue_id, [data1, data2, data3]))
   return render_template('pages/show_venue.html', venue=data)
@@ -360,35 +346,72 @@ def create_venue_form():
 def create_venue_submission():
   # TODO: insert form data as a new Venue record in the db, instead
   # TODO: modify data to be the data object returned from db insertion
-  new_venue = Venue(
-    name = get_value('name'),
-    genres = get_value('genres'),
-    address = get_value('address'),
-    city = get_value('city'),
-    state = get_value('state'),
-    phone = get_value('phone'),
-    website = get_value('website_link'),
-    seeking_talent = get_value('seeking_talent'),
-    seeking_description = get_value('seeking_description'),
-    facebook_link = get_value('facebook_link'),
-    image_link = get_value('image_link')
-  )
+  form = VenueForm(request.form)
+
+  name = form.name.data
+  city = form.city.data
+  state = form.state.data
+  address = form.address.data
+  phone = form.phone.data
+  image_link = form.image_link.data
+  facebook_link = form.facebook_link.data
+  website_link = form.website_link.data
+  seeking_description = form.seeking_description.data
+  genres = form.genres.data
+  seeking_talent = True if form.seeking_talent.data else False
+
+    
+  new_venue = Venue(name=name,city=city,state=state,address=address,phone=phone,
+  image_link=image_link,facebook_link=facebook_link,website=website_link,
+  seeking_description=seeking_description,seeking_client=seeking_talent, genres=genres)
 
   try:
     db.session.add(new_venue)
     db.session.commit()
-    # on successful db insert, flash success
-    flash('Venue ' + request.form['name'] + ' was successfully listed!')
-
+    db.session.add(new_genre)
+    db.session.commit()
+    error = False
   except:
-   # TODO: on unsuccessful db insert, flash an error instead.
-    flash('An error occurred. Venue ' + new_venue.name + ' could not be listed.', category='error')
-    print('exc_info()', exc_info())
     db.session.rollback()
-
+    error = True
+        
   finally:
     db.session.close()
-    return redirect(url_for('venues'))
+  if error :
+    flash('An error occurred. Venue ' + form.name.data + ' could not be listed.')
+    return render_template('pages/home.html')
+  elif not error:
+    flash('Venue ' + form.name.data + ' was successfully listed!')
+    return render_template('pages/home.html') 
+  # new_venue = Venue(
+  #   name = get_value('name'),
+  #   genres = get_value('genres'),
+  #   address = get_value('address'),
+  #   city = get_value('city'),
+  #   state = get_value('state'),
+  #   phone = get_value('phone'),
+  #   website = get_value('website_link'),
+  #   seeking_talent = get_value('seeking_talent'),
+  #   seeking_description = get_value('seeking_description'),
+  #   facebook_link = get_value('facebook_link'),
+  #   image_link = get_value('image_link')
+  # )
+
+  # try:
+  #   db.session.add(new_venue)
+  #   db.session.commit()
+  #   # on successful db insert, flash success
+  #   flash('Venue ' + request.form['name'] + ' was successfully listed!')
+
+  # except:
+  #  # TODO: on unsuccessful db insert, flash an error instead.
+  #   flash('An error occurred. Venue ' + new_venue.name + ' could not be listed.', category='error')
+  #   print('exc_info()', exc_info())
+  #   db.session.rollback()
+
+  # finally:
+  #   db.session.close()
+  #   return redirect(url_for('venues'))
 
   # return render_template('pages/home.html')
 
