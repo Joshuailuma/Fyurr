@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 7a6d50a04c58
+Revision ID: 1f74470518b7
 Revises: 
-Create Date: 2022-05-24 21:38:39.234015
+Create Date: 2022-05-25 13:17:48.600541
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '7a6d50a04c58'
+revision = '1f74470518b7'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -25,7 +25,7 @@ def upgrade():
     sa.Column('state', sa.String(length=120), nullable=False),
     sa.Column('phone', sa.String(length=120), nullable=False),
     sa.Column('genres', sa.ARRAY(sa.String()), nullable=False),
-    sa.Column('image_link', sa.String(length=500), nullable=False),
+    sa.Column('image_link', sa.String(), nullable=False),
     sa.Column('facebook_link', sa.String(length=120), nullable=True),
     sa.Column('website', sa.String(length=100), nullable=True),
     sa.Column('seeking_venue', sa.Boolean(), nullable=True),
@@ -39,7 +39,7 @@ def upgrade():
     sa.Column('state', sa.String(length=20), nullable=False),
     sa.Column('address', sa.String(length=120), nullable=False),
     sa.Column('phone', sa.String(length=120), nullable=False),
-    sa.Column('image_link', sa.String(length=500), nullable=False),
+    sa.Column('image_link', sa.String(), nullable=False),
     sa.Column('facebook_link', sa.String(length=120), nullable=True),
     sa.Column('genres', sa.ARRAY(sa.String()), nullable=False),
     sa.Column('website', sa.String(length=100), nullable=True),
@@ -52,8 +52,8 @@ def upgrade():
     sa.Column('artist_id', sa.Integer(), nullable=False),
     sa.Column('venue_id', sa.Integer(), nullable=False),
     sa.Column('start_time', sa.DateTime(), nullable=False),
-    sa.ForeignKeyConstraint(['artist_id'], ['Artist.id'], ),
-    sa.ForeignKeyConstraint(['venue_id'], ['Venue.id'], ),
+    sa.ForeignKeyConstraint(['artist_id'], ['Artist.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['venue_id'], ['Venue.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
